@@ -105,7 +105,7 @@ return
 
 ;====================================================================================================
 ;		Numpad Functions
-
+/*
 NumpadDiv::
 	WinGetClass, app ,A
 	WinMove, ahk_class %app%, , 50, 50, 800, 900
@@ -125,6 +125,7 @@ NumpadAdd::
 	WinGetClass, app ,A
 	WinMaximize, ahk_class %app%
 return
+*/
 
 ;====================================================================================================
 ;		Quick Access Apps
@@ -138,15 +139,6 @@ return
 	else
 		WinActivate ahk_exe chrome.exe
 return
-#IfWinActive ahk_exe chrome.exe
-	^RShift::
-		Send ^{PgUp}
-	return
-	RShift::
-		Send ^{PgDn}
-	return
-#IfWinActive
-
 
 ^2::	; Explorer
 	IfWinNotExist, ahk_class CabinetWClass
@@ -167,6 +159,14 @@ return
 		WinActivate ahk_exe notepad++.exe
 return
 
+#IfWinActive ahk_exe notepad++.exe
+
+^!-::
+	Send ------------------
+return
+#IfWinActive
+
+
 ^4::	; Word
 	IfWinNotExist, ahk_exe WINWORD.EXE
 		Run, WINWORD.EXE
@@ -177,17 +177,38 @@ return
 		WinActivate ahk_exe WINWORD.EXE
 return
 
+; Change Tab
+if WinActive(ahk_exe Code.exe) or WinActive(ahk_exe notepad++.exe) or WinActive(ahk_exe chrome.exe)
+{
+	^RShift::
+		Send ^{PgUp}
+	return
+	RShift::
+		Send ^{PgDn}
+	return
+}
+
+Insert::	; Calculator
+	Run, calc.exe
+return
+
+^0::
+	WinGetClass, app ,A
+	WinMinimize, ahk_class %app%
+return
+
 
 ;====================================================================================================
 ;		Relocate a program in a new virtual desktop
 
+/*
 ^5::
 	Send ^#d		; create new desktop
 	Send ^#{Left} 	; go back
 	Send #{Tab} 	; see open program
 
 return
-
+*/
 
 ;====================================================================================================
 ;		Microsoft To-Do
@@ -197,4 +218,23 @@ return
 ;	Run AddToDoTask.ahk
 ;return
 
+;====================================================================================================
+;		Fast App Switching
+
+^F4::
+	Run appSwitcher.ahk
+return
+
+;====================================================================================================
+;		IntelliJ
+
+#IfWinActive ahk_exe idea64.exe
+	^RShift::
+		Send !{Left}
+	return
+	RShift::
+		Send !{Right}
+	return
+	
+#IfWinActive
 
