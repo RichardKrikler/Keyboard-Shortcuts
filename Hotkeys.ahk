@@ -53,7 +53,7 @@ return
 
 
 ;====================================================================================================
-;		Show all Macros for an open program
+; Show all Macros for an open program (external)
 
 ^q::
 	Run ShowMacrosForProgram.ahk
@@ -131,13 +131,13 @@ return
 ;		Quick Access Apps
 
 ^1::	; Chrome
-	IfWinNotExist, ahk_exe chrome.exe
-		Run, chrome.exe
-		GroupAdd, gChrome, ahk_exe chrome.exe
-	if WinActive(ahk_exe chrome.exe)
-		GroupActivate, gChrome, r
-	else
-		WinActivate ahk_exe chrome.exe
+	IfWinNotExist, ahk_exe chrome.exe 			; if the window does not exist
+		Run, chrome.exe							; then start the program
+		GroupAdd, gChrome, ahk_exe chrome.exe 	; and add the new window to a group named "gChrome"
+	if WinActive(ahk_exe chrome.exe)			; if there is an active window (hidden or open)
+		GroupActivate, gChrome, r				; go to the next window in the "gChrome" group
+	else										; if there is not an active window
+		WinActivate ahk_exe chrome.exe			; activate (open) a window
 return
 
 ^2::	; Explorer
@@ -159,11 +159,13 @@ return
 		WinActivate ahk_exe notepad++.exe
 return
 
+
 #IfWinActive ahk_exe notepad++.exe
 
-^!-::
-	Send ------------------
-return
+	; dividing topics in notepad++
+	^!-::
+		Send ------------------
+	return
 #IfWinActive
 
 
@@ -177,7 +179,7 @@ return
 		WinActivate ahk_exe WINWORD.EXE
 return
 
-; Change Tab
+; Change Tab of multiple programs
 if WinActive(ahk_exe Code.exe) or WinActive(ahk_exe notepad++.exe) or WinActive(ahk_exe chrome.exe)
 {
 	^RShift::
@@ -188,10 +190,12 @@ if WinActive(ahk_exe Code.exe) or WinActive(ahk_exe notepad++.exe) or WinActive(
 	return
 }
 
-Insert::	; Calculator
+; Start Calculator
+Insert::
 	Run, calc.exe
 return
 
+; Hide the current active window
 ^0::
 	WinGetClass, app ,A
 	WinMinimize, ahk_class %app%
@@ -219,7 +223,7 @@ return
 ;return
 
 ;====================================================================================================
-;		Fast App Switching
+;		Fast App Switching (external)
 
 ^F4::
 	Run appSwitcher.ahk
@@ -228,6 +232,7 @@ return
 ;====================================================================================================
 ;		IntelliJ
 
+; Tab Switcher
 #IfWinActive ahk_exe idea64.exe
 	^RShift::
 		Send !{Left}
