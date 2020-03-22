@@ -243,3 +243,28 @@ return
 	
 #IfWinActive
 
+;====================================================================================================
+;		Volume via scroll wheel
+
+!WheelDown::
+	Send {Volume_Down}
+return
+
+!WheelUp::
+	Send {Volume_Up}
+return
+
+; Mutung with the middle mouse button (and alt)
+!MButton::
+	Send {Volume_Mute}
+return
+
+;====================================================================================================
+;		Dictionary input ("leo.org")
+
+!PgDn::
+	InputBox, UserInput, Dictionary, Enter a word to search at leo.org
+	if ErrorLevel
+    	Exit
+	Run https://dict.leo.org/englisch-deutsch/%UserInput%
+return
