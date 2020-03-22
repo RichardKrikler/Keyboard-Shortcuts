@@ -159,7 +159,6 @@ return
 		WinActivate ahk_exe notepad++.exe
 return
 
-
 #IfWinActive ahk_exe notepad++.exe
 
 	; dividing topics in notepad++
