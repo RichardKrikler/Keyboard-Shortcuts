@@ -1,3 +1,8 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+
 ; Show all Macros for an open program
 
 boxW = 400
@@ -43,18 +48,8 @@ writeToGui(text) {
 }
 
 
-state := 0 ; Acer
-if (A_ComputerName == "DESKTOP-5S07O77") {
-	state := 1 ; Surface
-}
-;						   Acer	   Surface
-; todo := ((state == 0) ? (888) : (13424))
-
-
-
-explorer = CabinetWClass
-if (currentClass == explorer)
-{
+; Microsoft File Explorer
+if (currentClass == "CabinetWClass") {
 	writeToGui("Open/Switch: Ctrl(+)2")
 	writeToGui("One folder UP: Alt(+)Up")
 	writeToGui("Create Folder: Ctrl(+).")
@@ -63,21 +58,18 @@ if (currentClass == explorer)
 	writeToGui("Select several items: Strg")
 }
 
-chrome = chrome.exe
-if (currentExe == chrome)
-{
+; Google Chrome
+if (currentExe == "chrome.exe") {
 	writeToGui("Open: Ctrl(+)1")
 	writeToGui("Switch: RShift")
 	writeToGui("Duplicate Tab: Ctrl(+)Alt(+)D")
-	writeToGui("Open Link: Ctrl(+)Alt(+)T")
 	writeToGui("Reload CSS & JS: Ctrl(+)Shift(+)R")
 	writeToGui("Delete Chrome Data: Ctrl(+)Shift(+)Del")
 	writeToGui("Open RescueTime: Alt(+)T")
 }
 
-word = WINWORD.EXE
-if (currentExe == word)
-{
+; Microsoft Word
+if (currentExe == "WINWORD.EXE") {
 	writeToGui("Mark selected text (classic): RShift")
 	writeToGui("Mark selected text (light): Ctrl(+)Alt(+)#")
 	writeToGui("Remove marker: Ctrl(+)Alt(+)-")
@@ -86,15 +78,15 @@ if (currentExe == word)
 	writeToGui("Paste unformatted Text: Strg(+)Alt(+)V")
 }
 
-notepad = notepad++.exe
-if (currentExe == notepad)
-{
+; Notepad++
+if (currentExe == "notepad++.exe") {
 	writeToGui("Open/Switch: Ctrl(+)3")
 	writeToGui("Make to comment: Ctrl(+)K")
+	writeToGui("Delete a line: Ctrl(+)Shift(+)L")
 }
 
-if (currentTitle == "Microsoft To Do")
-{
+; Microsoft To Do
+if (currentTitle == "Microsoft To Do") {
 	writeToGui("Open: Win(+)2")
 	writeToGui("Add new Task: Ctrl(+)N")
 	writeToGui("Add new Task to My Day: Ctrl(+)T")
@@ -103,56 +95,91 @@ if (currentTitle == "Microsoft To Do")
 	writeToGui("Sync: Ctrl(+)R")
 }
 
-; out of order
-desktop := ((state == 0) ? (8108) : (9844))
-if (currentPid == desktop)
-{
-	writeToGui("Open/Switch Chrome: Ctrl(+)1")
-	writeToGui("Open/Switch Explorer: Ctrl(+)2")
-	writeToGui("Open/Switch Notepad: Ctrl(+)3")
+; Todoist
+if (currentTitle == "Todoist – To Do Liste & Taskmanager") {
+	writeToGui("Add new Task: Q")
+	writeToGui("Sort by Date: D")
+	writeToGui("Sort by Priority: P")
+
 }
 
-visualStudioCode = Code.exe
-if (currentExe == visualStudioCode)
-{
+; VSC (Visual Studio Code)
+if (currentExe == "Code.exe") {
 	writeToGui("Make to comment: Ctrl(+)#")
 	writeToGui("Open Settings: Ctrl(+),")
+	writeToGui("Show SVG: Alt(+)Shift(+)S O")
+	writeToGui("Show side menu: Strg(+)b")
 }
 
-if (SubStr(currentTitle, -13) == "Microsoft Edge") {
+; Microsoft Edge Browser
+if (currentExe == "msedge.exe") {
 	writeToGui("Duplicate Tab: Ctrl(+)Alt(+)D")
 }
 
+; YouTube on Google Chrome
 if (SubStr(currentTitle, -22) == "YouTube - Google Chrome") {
 	writeToGui("Youtube: 10s back: J")
 	writeToGui("Youtube: 10s forward: L")
 }
 
-gnu = gnusim8085.exe
-if (currentExe == gnu)
-{
+; GnuSim8085
+if (currentExe == "gnusim8085.exe") {
 	writeToGui("Listing anzeigen: Ctrl(+)L")
 	writeToGui("Reset Register, Flags, Speicher: Ctrl(+)R")
 	writeToGui("Go through line by line: F5")
 	writeToGui("Assemble: F8")
 }
 
-intelliJ = idea64.exe
-if (currentExe == intelliJ)
-{
+; JetBrains: IntelliJ
+if (currentExe == "idea64.exe") {
 	writeToGui("Settings: Ctrl(+)Alt(+)S")
 	writeToGui("Project Settings: Ctrl(+)Shift(+)Alt(+)S")
 	writeToGui("Select Methods to override: Ctrl(+)O")
 	writeToGui("Format the whole file: Ctrl(+)Alt(+)L")
-	writeToGui("Comment the selected files: Ctrl(+)FN(+)/")
+	writeToGui("Create Line Comment: Strg(+)Num/")
+	writeToGui("Create Block Comment: Strg(+)Shift(+)Num/")
+	writeToGui("Create new Class: Num1")
+	writeToGui("Create JavaDoc: Num2")
 }
 
-VMware = vmware.exe
-if (currentExe == VMware)
-{
+; JetBrains: PyCharm
+if (currentExe == "pycharm64.exe") {
+	writeToGui("Settings: Ctrl(+)Alt(+)S")
+	writeToGui("Format the whole file: Ctrl(+)Alt(+)L")
+	writeToGui("Create Line Comment: Strg(+)Num/")
+	writeToGui("Create new Python File: Num1")
+}
+
+
+; VMware
+if (currentExe == "vmware.exe") {
 	writeToGui("Get out of VM: Ctrl(+)Alt")
 	writeToGui("View Library: F9")
 }
+
+; Audacity
+if (currentExe == "audacity.exe") {
+	writeToGui("Cut on the current position: Ctrl(+)I")
+	writeToGui("Play: Space")
+	writeToGui("Pause: P")
+}
+
+; Discord
+if (currentExe == "Discord.exe") {
+	writeToGui("Mute: Ctrl(+)Alt(+)m")
+	writeToGui("Mute temporarily: Alt(+)m")
+	writeToGui("Deafen: Ctrl(+)Alt(+)n")
+}
+
+; Windows Terminal App
+if (currentExe == "WindowsTerminal.exe") {
+	writeToGui("New PowerShell: Strg(+)Shift(+)1")
+	writeToGui("New CMD: Strg(+)Shift(+)2")
+	writeToGui("New Ubuntu: Strg(+)Shift(+)3")
+	writeToGui("Switch Terminals: Strg(+)Tab")
+}
+
+
 
 Sleep, 9000
 ExitApp

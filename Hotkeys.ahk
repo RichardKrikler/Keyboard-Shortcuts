@@ -1,19 +1,25 @@
-;====================================================================================================
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+
+
+; ------------------
 ;		Reload Script
 !^u::
 	Reload
 return
 
-;====================================================================================================
-;		General Commands
+; ------------------
+; General Commands
 
 ; Windows + R ->    Strg + UMSCHALT + Enter -> Admin Modus
 ; 
 
-;====================================================================================================
-;		File Explorer
+; ------------------
+; File Explorer
 
-;One Folder Up == {Alt}{Up}
+; One Folder Up == {Alt}{Up}
 
 #IfWinActive ahk_class CabinetWClass
 	;Create Folder
@@ -30,41 +36,31 @@ return
 	return
 #IfWinActive
 
-;====================================================================================================
-;		Browser
+; ------------------
+; Browser
 
-;Duplicate a window
+; Duplicate a window
 ^!d::
 ;					  Chrome							 Edge
-WinGetActiveTitle, currentTitle
-if (WinActive("ahk_exe chrome.exe") or SubStr(currentTitle, -13) == "Microsoft Edge")
-	Send !d
-	Send !`r
+	WinGetActiveTitle, currentTitle
+	if (WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe msedge.exe"))
+		Send !d
+		Send !`r
 return
 
-;Open link in new Tab
-#IfWinActive ahk_exe chrome.exe
-	^!t::
-		Send {Click, right}
-		Sleep, 150
-		Send {Down}{Enter}
-	return
-#IfWinActive
-
-
-;====================================================================================================
+; ------------------
 ; Show all Macros for an open program (external)
 
 ^q::
 	Run ShowMacrosForProgram.ahk
 return
 
-;====================================================================================================
-;		Word
+; ------------------
+; Word
 
 #IfWinActive ahk_exe WINWORD.EXE
 	; Classic Yellow Marker
-	RShift::
+	^RShift::
 		Send !r
 		Send ge
 		Send {Enter}
@@ -81,7 +77,7 @@ return
 	return
 	
 	; Remove yellow Marker
-	^!-::
+	^!;::
 		Send !r
 		Send ge
 		Send k
@@ -91,20 +87,30 @@ return
 	^!p::
 		Send !d
 		Send r
+		Send f
 		Send h
 	return
+
+	; Ω-symbol
+	#^!o::
+		Send !i
+		Send zs
+		Send sy
+		Send {Enter}
+	return
+
 #IfWinActive
 
-;====================================================================================================
-;		Excel
+; ------------------
+; Excel
 
 #IfWinActive ahk_exe EXCEL.EXE
 	
 
 #IfWinActive
 
-;====================================================================================================
-;		Numpad Functions
+; ------------------
+; Numpad Functions
 /*
 NumpadDiv::
 	WinGetClass, app ,A
@@ -127,10 +133,23 @@ NumpadAdd::
 return
 */
 
-;====================================================================================================
-;		Quick Access Apps
 
-^1::	; Chrome
+; ------------------
+; Quick Access Apps
+
+; Edge-Browser
++^1::
+	IfWinNotExist, ahk_exe msedge.exe 			; if the window does not exist
+		Run, msedge.exe							; then start the program
+		GroupAdd, gEdge, ahk_exe msedge.exe 	; and add the new window to a group named "gEdge"
+	if WinActive(ahk_exe msedge.exe)			; if there is an active window (hidden or open)
+		GroupActivate, gEdge, r					; go to the next window in the "gEdge" group
+	else										; if there is not an active window
+		WinActivate ahk_exe msedge.exe			; activate (open) a window
+return
+
+; Chrome
+^1::
 	IfWinNotExist, ahk_exe chrome.exe 			; if the window does not exist
 		Run, chrome.exe							; then start the program
 		GroupAdd, gChrome, ahk_exe chrome.exe 	; and add the new window to a group named "gChrome"
@@ -140,7 +159,8 @@ return
 		WinActivate ahk_exe chrome.exe			; activate (open) a window
 return
 
-^2::	; Explorer
+; Explorer
+^2::
 	IfWinNotExist, ahk_class CabinetWClass
 		Run, explorer.exe
 		GroupAdd, gExplorers, ahk_class CabinetWClass
@@ -150,7 +170,8 @@ return
 		WinActivate ahk_class CabinetWClass
 return
 
-^3::	; Notepad
+; Notepad
+^3::
 	IfWinNotExist, ahk_exe notepad++.exe
 		Run, notepad++.exe
 	if WinActive(ahk_exe notepad++.exe)
@@ -159,12 +180,26 @@ return
 		WinActivate ahk_exe notepad++.exe
 return
 
-#IfWinActive ahk_exe notepad++.exe
-
-	; dividing topics in notepad++
+#If WinActive("ahk_exe notepad++.exe") 
+or WinActive("ahk_exe Code.exe") 
+or WinActive("ahk_exe PacketTracer7.exe") 
+or WinActive("ahk_exe idea64.exe") 
+or WinActive("ahk_exe datagrip64.exe") 
+or WinActive("ahk_exe soffice.bin") 
+or WinActive("ahk_exe WINWORD.EXE")
+	; dividing topics
 	^!-::
 		Send ------------------
 	return
+	
+#IfWinActive
+
+#If WinActive("ahk_exe PacketTracer7.exe")
+	; marking network address
+	^!.::
+		Send |------------------|
+	return
+	
 #IfWinActive
 
 
@@ -178,16 +213,16 @@ return
 		WinActivate ahk_exe WINWORD.EXE
 return
 
-; Change Tab of multiple programs
-if WinActive(ahk_exe Code.exe) or WinActive(ahk_exe notepad++.exe) or WinActive(ahk_exe chrome.exe)
-{
-	^RShift::
+; Change Tab, for multiple programs
+#If WinActive("ahk_exe Code.exe") or WinActive("ahk_exe notepad++.exe") or WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe msedge.exe")
+	^!RShift::
 		Send ^{PgUp}
 	return
-	RShift::
+	^RShift::
 		Send ^{PgDn}
 	return
-}
+#IfWinActive
+
 
 ; Start Calculator
 Insert::
@@ -201,8 +236,8 @@ return
 return
 
 
-;====================================================================================================
-;		Relocate a program in a new virtual desktop
+; ------------------
+; Relocate a program in a new virtual desktop
 
 /*
 ^5::
@@ -213,53 +248,50 @@ return
 return
 */
 
-;====================================================================================================
-;		Microsoft To-Do
-
-;	shortcut for adding a task in a gui input
-;^!,::
-;	Run AddToDoTask.ahk
-;return
-
-;====================================================================================================
-;		Fast App Switching (external)
+; ------------------
+; Fast App Switching (external)
 
 ^F4::
 	Run appSwitcher.ahk
 return
 
-;====================================================================================================
-;		IntelliJ
+; ------------------
+; IntelliJ
 
-; Tab Switcher
 #IfWinActive ahk_exe idea64.exe
-	^RShift::
+	; change Tabs
+	^!RShift::
 		Send !{Left}
 	return
-	RShift::
+	^RShift::
 		Send !{Right}
+	return
+	
+	; Create Javadoc
+	Numpad2::
+		Send, /**{Enter}
 	return
 	
 #IfWinActive
 
-;====================================================================================================
-;		Volume via scroll wheel
+; ------------------
+; Volume via scroll wheel
 
-!WheelDown::
-	Send {Volume_Down}
-return
+; !WheelDown::
+; 	Send {Volume_Down}
+; return
 
-!WheelUp::
-	Send {Volume_Up}
-return
+; !WheelUp::
+; 	Send {Volume_Up}
+; return
 
-; Mutung with the middle mouse button (and alt)
+; Mute with the middle mouse button (and alt)
 !MButton::
 	Send {Volume_Mute}
 return
 
-;====================================================================================================
-;		Dictionary input ("leo.org")
+; ------------------
+; Dictionary input ("leo.org")
 
 !PgDn::
 	InputBox, UserInput, Dictionary, Enter a word to search at leo.org
@@ -267,3 +299,80 @@ return
     	Exit
 	Run https://dict.leo.org/englisch-deutsch/%UserInput%
 return
+
+; ------------------
+; Maximize Active Window
+
+#y::
+	WinMaximize, A
+Return
+
+; ------------------
+; Snap window to the left
+#s::
+	Send #{Left}
+return
+
+; Snap window to the right
+#c::
+	Send #{Right}
+return
+
+; ------------------
+; FoxitReader.exe
+
+#IfWinActive ahk_exe FoxitReader.exe
+	; change Tabs
+	^!RShift::
+		; Strg + Shift + Page Up
+		Send ^+{PgUp}
+	return
+	^RShift::
+		Send ^+{PgDn}
+	return
+
+	; Strg+Z -- step backward
+	F1::
+		Send ^z
+	return
+	; Strg+Shift+Z -- step forward
+	F3::
+		Send ^+z
+	return
+#IfWinActive
+
+; ------------------
+; Open File via File Explorer with full Path from Clipboard
+; Shortcut: Win + ?
+
+#?::
+	Send #r
+	Sleep 100
+	Send ^v
+	Sleep 100
+	Send {Enter}
+return
+
+
+; ------------------
+; Abbreviations
+
+::RKA::Richard Krikler
+
+
+; ------------------
+; usages.ahk - CPU & RAM
+
+#^!c::
+Run usages.ahk
+return
+
+#^!e::
+Run usagesExtended.ahk
+return
+
+
+
+
+
+
